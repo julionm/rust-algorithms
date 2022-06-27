@@ -23,6 +23,32 @@ pub fn binary_search(vector: &[u32], number: u32) -> i32 {
     -1
 }
 
+pub fn selection_sort(mut vec: Vec<usize>) -> Vec<usize> {
+    let len = vec.len();
+    let mut ranked = vec![];
+
+    for num in 0..len {
+
+        let mut highest = 0_usize;
+        let mut highest_loc = 0_usize;
+        let other_vec = &mut vec;
+
+        for (index, value) in other_vec.into_iter().enumerate() {
+            if *value > highest {
+                highest = *value;
+                highest_loc = index;
+            }
+        }
+
+        other_vec.remove(highest_loc);
+
+        ranked.push(highest);
+
+    }
+
+    ranked
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -42,6 +68,15 @@ mod tests {
         let number = 14;
 
         assert_eq!(binary_search(&vector, number), 2);
+
+    }
+
+    #[test]
+    fn test_selection_sort() {
+        let selection_sort_vec = vec![9, 16, 7, 8, 2, 12];
+        let right_answer = vec![16, 12, 9, 8, 7, 2];
+
+        assert_eq!(selection_sort(selection_sort_vec), right_answer);
 
     }
 }
