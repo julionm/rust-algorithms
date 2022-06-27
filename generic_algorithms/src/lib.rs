@@ -49,6 +49,22 @@ pub fn selection_sort(mut vec: Vec<usize>) -> Vec<usize> {
     ranked
 }
 
+pub fn factorial(x: usize) -> usize {
+    if x == 1 {
+        return x
+    } else {
+        x * factorial(x - 1)
+    }
+}
+
+pub fn vec_reducer(mut vec: &mut Vec<usize>) -> usize {
+    if vec.len() == 0 {
+        0
+    } else {
+        vec.pop().unwrap() + vec_reducer(&mut vec)
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -79,4 +95,12 @@ mod tests {
         assert_eq!(selection_sort(selection_sort_vec), right_answer);
 
     }
+
+    #[test]
+    fn test_sum_vec_reducer() {
+        let  mut a = vec![1, 4, 5, 6, 7];
+        
+        assert_eq!(vec_reducer(&mut a), 23);
+    }
+
 }
