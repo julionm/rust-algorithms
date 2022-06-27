@@ -57,12 +57,30 @@ pub fn factorial(x: usize) -> usize {
     }
 }
 
-pub fn vec_reducer(mut vec: &mut Vec<usize>) -> usize {
+pub fn vec_reducer(mut vec: Vec<usize>) -> usize {
     if vec.len() == 0 {
         0
     } else {
-        vec.pop().unwrap() + vec_reducer(&mut vec)
+        vec.pop().unwrap() + vec_reducer(vec)
     }
+}
+
+pub fn highest(mut vec: Vec<usize>) -> usize {
+
+    if vec.len() == 1 {
+        vec[0]
+    } else if vec.len() == 0 {
+        0
+    } else {
+        if vec[0] < vec[1] {
+            vec.remove(0);
+            highest(vec)
+        } else  {
+            vec.remove(1);
+            highest(vec)
+        }
+    }
+
 }
 
 #[cfg(test)]
@@ -100,7 +118,14 @@ mod tests {
     fn test_sum_vec_reducer() {
         let  mut a = vec![1, 4, 5, 6, 7];
         
-        assert_eq!(vec_reducer(&mut a), 23);
+        assert_eq!(vec_reducer(a), 23);
+    }
+
+    #[test]
+    fn test_highest_value() {
+        let mut s = vec![6, 7, 8, 10, 4, 12, 14, 37, 2];
+
+        assert_eq!(highest(s), 37);
     }
 
 }
