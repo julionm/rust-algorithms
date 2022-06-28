@@ -83,6 +83,32 @@ pub fn highest(mut vec: Vec<usize>) -> usize {
 
 }
 
+pub fn quicksort(vec: Vec<usize>) -> Vec<usize> {
+    if vec.len() < 2 {
+        return vec;
+    } else {
+
+        let pivot = vec[0];
+
+        let mut lesser: Vec<usize> = vec![];
+        let mut greater: Vec<usize> = vec![];
+
+        for val in vec[1..].into_iter() {
+            if *val <= pivot {
+                lesser.push(*val);
+            } else if *val > pivot {
+                greater.push(*val);
+            }
+        }
+
+        let mut lesser = quicksort(lesser);
+        lesser.push(pivot);
+        let greater = quicksort(greater);
+
+        [lesser, greater].concat()
+    }
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -126,6 +152,13 @@ mod tests {
         let mut s = vec![6, 7, 8, 10, 4, 12, 14, 37, 2];
 
         assert_eq!(highest(s), 37);
+    }
+
+    #[test]
+    fn test_quicksort() {
+        let vec = vec![17, 5, 14, 8, 9, 6, 32, 11, 21, 3];
+
+        assert_eq!(quicksort(vec), [3, 5, 6, 8, 9, 11, 14, 17, 21, 32]);
     }
 
 }
