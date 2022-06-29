@@ -1,3 +1,5 @@
+use std::collections::{HashMap, VecDeque};
+
 pub fn binary_search(vector: &[u32], number: u32) -> i32 {
 
     let mut init = 0;
@@ -107,6 +109,26 @@ pub fn quicksort(vec: Vec<usize>) -> Vec<usize> {
 
         [lesser, greater].concat()
     }
+}
+
+pub fn breadth_first_search() {
+    let mut hash_map: HashMap<&str, Vec<&str>> = HashMap::new();
+
+    hash_map.insert("you", vec!["alice", "bob", "claire"]);
+    hash_map.insert("bob", vec!["anuj", "peggy"]);
+    hash_map.insert("alice", vec!["peggy"]);
+    hash_map.insert("claire", vec!["thom", "jonny"]);
+    hash_map.insert("anuj", vec![]);
+    hash_map.insert("peggy", vec![]);
+    hash_map.insert("thom", vec![]);
+    hash_map.insert("jonny", vec![]);
+
+    let mut queue: VecDeque<&str> = VecDeque::new();
+
+    for i in hash_map.get("you").unwrap() {
+        queue.push_back(*i);
+    }
+
 }
 
 #[cfg(test)]
