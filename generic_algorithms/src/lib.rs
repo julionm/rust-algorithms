@@ -1,6 +1,6 @@
 use std::collections::{HashMap, VecDeque};
 
-pub fn binary_search(vector: &[u32], number: u32) -> i32 {
+pub fn binary_search(vector: &[u32], number: u32) -> i32 { // * O(log n)
 
     let mut init = 0;
     let mut last = vector.len() as u32;
@@ -25,11 +25,11 @@ pub fn binary_search(vector: &[u32], number: u32) -> i32 {
     -1
 }
 
-pub fn selection_sort(mut vec: Vec<usize>) -> Vec<usize> {
+pub fn selection_sort(mut vec: Vec<usize>) -> Vec<usize> { // *  O(n * n)
     let len = vec.len();
     let mut ranked = vec![];
 
-    for num in 0..len {
+    for _ in 0..len {
 
         let mut highest = 0_usize;
         let mut highest_loc = 0_usize;
@@ -85,7 +85,7 @@ pub fn highest(mut vec: Vec<usize>) -> usize {
 
 }
 
-pub fn quicksort(vec: Vec<usize>) -> Vec<usize> {
+pub fn quicksort(vec: Vec<usize>) -> Vec<usize> { // * O(n log n)
     if vec.len() < 2 {
         return vec;
     } else {
@@ -111,7 +111,7 @@ pub fn quicksort(vec: Vec<usize>) -> Vec<usize> {
     }
 }
 
-pub fn breadth_first_search() {
+pub fn breadth_first_search() { // * O(V + E)
     let mut hash_map: HashMap<&str, Vec<&str>> = HashMap::new();
 
     hash_map.insert("you", vec!["alice", "bob", "claire"]);
@@ -123,10 +123,26 @@ pub fn breadth_first_search() {
     hash_map.insert("thom", vec![]);
     hash_map.insert("jonny", vec![]);
 
-    let mut queue: VecDeque<&str> = VecDeque::new();
+    let mut queue: VecDeque<&str> = VecDeque::from(hash_map.get("you").unwrap().clone());
 
-    for i in hash_map.get("you").unwrap() {
-        queue.push_back(*i);
+    let mut searched: Vec<&str> = vec![];
+
+    println!("The queue: {:?}", queue);
+
+    while queue.len() > 0 {
+        let person = queue.pop_front().unwrap();
+
+        if !searched.contains(&person) {
+            if person.contains("th") { // * logic to define if we got to the destination
+                println!("{person} is a great person!");
+                return;
+            } else {
+                searched.push(person);
+                queue.append(
+                    &mut VecDeque::from(hash_map.get(person).unwrap().clone())
+                )
+            }
+        }
     }
 
 }
@@ -164,14 +180,14 @@ mod tests {
 
     #[test]
     fn test_sum_vec_reducer() {
-        let  mut a = vec![1, 4, 5, 6, 7];
+        let a = vec![1, 4, 5, 6, 7];
         
         assert_eq!(vec_reducer(a), 23);
     }
 
     #[test]
     fn test_highest_value() {
-        let mut s = vec![6, 7, 8, 10, 4, 12, 14, 37, 2];
+        let s = vec![6, 7, 8, 10, 4, 12, 14, 37, 2];
 
         assert_eq!(highest(s), 37);
     }
@@ -181,6 +197,13 @@ mod tests {
         let vec = vec![17, 5, 14, 8, 9, 6, 32, 11, 21, 3];
 
         assert_eq!(quicksort(vec), [3, 5, 6, 8, 9, 11, 14, 17, 21, 32]);
+    }
+
+    #[test]
+    fn test_breadth_first_search() {
+        breadth_first_search();
+
+        assert!(true);
     }
 
 }
