@@ -1,4 +1,7 @@
 use std::collections::{HashMap, VecDeque};
+use std::f32::INFINITY;
+use std::thread::sleep;
+use std::time::Duration;
 
 pub fn binary_search(vector: &[u32], number: u32) -> i32 { // * O(log n)
 
@@ -147,6 +150,75 @@ pub fn breadth_first_search() { // * O(V + E)
 
 }
 
+pub fn dijkstra() {
+    let mut graph = HashMap::from([
+        ("start", HashMap::from([
+            ("a", 6_f32),
+            ("b", 2_f32)
+        ])), 
+        ("a", HashMap::from([
+            ("end", 1_f32)
+        ])), 
+        ("b", HashMap::from([
+            ("a", 3_f32),
+            ("end", 5_f32)
+        ])),
+        ("end", HashMap::new())
+    ]);
+    let mut costs = HashMap::from([
+        ("a", 6_f32),
+        ("b", 2_f32),
+        ("end", INFINITY)
+    ]);
+        
+    let mut parents = HashMap::from([
+        ("a", "start"),
+        ("b", "start"),
+        ("end", "")
+    ]);
+
+    let mut processed: Vec<&str> = vec![];
+
+    // * graph["start"]["a"]
+    // * graph.get("start").unwrap().get("a").unwrap();
+
+    let mut node = find_lowest_cost_node(&costs, &processed);
+
+    while let Some(node_v) = node {
+
+        let cost = *costs.get(node_v).unwrap();
+
+        let neighbors = graph.get(node_v).unwrap();
+
+        for neighbor in neighbors.keys() {
+            let new_cost = cost + neighbors.get(neighbor).unwrap();
+
+            if *costs.get(neighbor).unwrap() > new_cost {
+                costs.insert(neighbor, new_cost);
+                parents.insert(neighbor, node_v);
+            }
+        }
+
+        processed.push(node_v);
+        // node = find_lowest_cost_node(&costs, &processed);
+        
+    }
+}
+
+pub fn find_lowest_cost_node(costs: &HashMap<&str, f32>, processed: &Vec<&str>) -> Option<&str>  {
+    let mut lowest_cost = INFINITY;
+    let mut lowest_cost_node: Option<&str> = None;
+
+    for (node, value) in costs {
+        if *value < lowest_cost && !&processed.contains(&node) {
+            lowest_cost = *value;
+            lowest_cost_node = Some((*node).clone());
+        }
+    }
+
+    lowest_cost_node
+}
+
 #[cfg(test)]
 mod tests {
 
@@ -204,6 +276,13 @@ mod tests {
         breadth_first_search();
 
         assert!(true);
+    }
+
+    #[test]
+    fn test_dijkstra() {
+        dijkstra();
+
+        assert!(true)
     }
 
 }
