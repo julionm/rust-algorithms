@@ -1,7 +1,5 @@
-use std::collections::{HashMap, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::f32::INFINITY;
-use std::thread::sleep;
-use std::time::Duration;
 
 pub fn binary_search(vector: &[u32], number: u32) -> i32 { // * O(log n)
 
@@ -200,12 +198,13 @@ pub fn dijkstra() {
         }
 
         processed.push(node_v);
-        // node = find_lowest_cost_node(&costs, &processed);
-        
+        node = find_lowest_cost_node(&costs, &processed);
     }
+
+    println!("In the end lesser cost was: {}", costs.get("end").unwrap());
 }
 
-pub fn find_lowest_cost_node(costs: &HashMap<&str, f32>, processed: &Vec<&str>) -> Option<&str>  {
+pub fn find_lowest_cost_node<'a>(costs: &HashMap<&'a str, f32>, processed: &Vec<&str>) -> Option<&'a str>  {
     let mut lowest_cost = INFINITY;
     let mut lowest_cost_node: Option<&str> = None;
 
@@ -217,6 +216,56 @@ pub fn find_lowest_cost_node(costs: &HashMap<&str, f32>, processed: &Vec<&str>) 
     }
 
     lowest_cost_node
+}
+
+pub fn greedy_algorithm() {
+    let wanted_states = HashSet::from(
+        [
+            String::from("sp"),
+            String::from("mg"),
+            String::from("ba"),
+            String::from("rj"),
+            String::from("am"),
+            String::from("pa"),
+            String::from("sc"),
+            String::from("rs"),
+            String::from("es")
+        ]
+    );
+
+    let stations = HashMap::from([
+        (
+            String::from("one"),
+            HashSet::from([String::from("rj"), String::from("pa"), String::from("sp")])
+        ),
+        (String::from("two"), HashSet::from([String::from("ba"), String::from("mg"), String::from("rs")])),
+        (String::from("three"), HashSet::from([String::from("am"), String::from("es"), String::from("sc")])),
+        (String::from("four"), HashSet::from([String::from("rj"), String::from("pa"), String::from("sp")])),
+        (String::from("five"), HashSet::from([String::from("es"), String::from("rs")])),
+    ]);
+
+    let mut final_stations: HashSet<String> = HashSet::new();
+    
+    while wanted_states.len() > 0 {
+        let mut states_covered: HashSet<&String> = HashSet::new();
+        let mut best_station = String::new();
+
+        for (state, stations) in &stations {
+            // ! why does this result in HashMap<&String>
+            // ? maybe study more what does this collect do under the hood
+            let covered: HashSet<&String> = wanted_states.intersection(stations).collect();
+
+            if covered.len() > states_covered.len() {
+                best_station = state.clone();
+                states_covered = covered;
+            }
+        }
+
+        // wanted_states.difference(&states_covered);
+
+        final_stations.insert(best_station);
+    }
+
 }
 
 #[cfg(test)]
@@ -280,7 +329,7 @@ mod tests {
 
     #[test]
     fn test_dijkstra() {
-        dijkstra();
+        // dijkstra();
 
         assert!(true)
     }
