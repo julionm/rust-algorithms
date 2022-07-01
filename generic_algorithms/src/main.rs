@@ -1,6 +1,7 @@
-use generic_algorithms::dijkstra;
+use generic_algorithms::{dijkstra, greedy_algorithm};
 
 fn main() {
-    dijkstra();
+    // * dijkstra();
+    // * greedy_algorithm();
 }
 

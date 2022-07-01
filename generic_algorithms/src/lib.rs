@@ -219,7 +219,7 @@ pub fn find_lowest_cost_node<'a>(costs: &HashMap<&'a str, f32>, processed: &Vec<
 }
 
 pub fn greedy_algorithm() {
-    let wanted_states = HashSet::from(
+    let mut wanted_states = HashSet::from(
         [
             String::from("sp"),
             String::from("mg"),
@@ -238,10 +238,22 @@ pub fn greedy_algorithm() {
             String::from("one"),
             HashSet::from([String::from("rj"), String::from("pa"), String::from("sp")])
         ),
-        (String::from("two"), HashSet::from([String::from("ba"), String::from("mg"), String::from("rs")])),
-        (String::from("three"), HashSet::from([String::from("am"), String::from("es"), String::from("sc")])),
-        (String::from("four"), HashSet::from([String::from("rj"), String::from("pa"), String::from("sp")])),
-        (String::from("five"), HashSet::from([String::from("es"), String::from("rs")])),
+        (
+            String::from("two"),
+            HashSet::from([String::from("ba"), String::from("mg"), String::from("rs")])
+        ),
+        (
+            String::from("three"),
+            HashSet::from([String::from("am"), String::from("es"), String::from("sc")])
+        ),
+        (
+            String::from("four"),
+            HashSet::from([String::from("rj"), String::from("pa"), String::from("sp")])
+        ),
+        (
+            String::from("five"),
+            HashSet::from([String::from("es"), String::from("rs")])
+        ),
     ]);
 
     let mut final_stations: HashSet<String> = HashSet::new();
@@ -251,8 +263,6 @@ pub fn greedy_algorithm() {
         let mut best_station = String::new();
 
         for (state, stations) in &stations {
-            // ! why does this result in HashMap<&String>
-            // ? maybe study more what does this collect do under the hood
             let covered: HashSet<&String> = wanted_states.intersection(stations).collect();
 
             if covered.len() > states_covered.len() {
@@ -261,10 +271,21 @@ pub fn greedy_algorithm() {
             }
         }
 
-        // wanted_states.difference(&states_covered);
+        wanted_states = 
+            wanted_states
+                .difference(
+                    &states_covered
+                        .into_iter()
+                        .map(Clone::clone)
+                        .collect()
+                )
+                .map(Clone::clone)
+                .collect();
 
         final_stations.insert(best_station);
     }
+
+    println!("{:?}", final_stations);
 
 }
 
